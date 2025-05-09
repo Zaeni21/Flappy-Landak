@@ -173,17 +173,29 @@ function showGameOver(score) {
   update();
 }
 async function connectWallet() {
-  try {
-    await window.ethereum.request({
-      method: 'wallet_addEthereumChain',
-      params: [{
-        chainId: '0x279F',
-        chainName: 'Monad Testnet',
-        rpcUrls: ['https://testnet-rpc.monad.xyz'],
-        nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
-        blockExplorerUrls: ['https://testnet.monadexplorer.com']
-      }]
-    });
+    await provider.send("eth_requestAccounts", []);
+    const address = await signer.getAddress();
+    document.getElementById('walletAddress').innerHTML = `
+      <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+      <span class="text-sm">${address.slice(0, 5)}...${address.slice(-3)}</span>`;
+    document.getElementById('walletPopup').classList.remove('hidden');
+    isConnected = true;
+  }
+  document.getElementById('walletAddress').addEventListener('click', async () => {
+    if (!isConnected) {
+      await switchToMonad();
+      await connectWallet();
+    } else {
+      document.getElementById('walletPopup').classList.toggle('hidden');
+    }
+  });
+  function disconnectWallet() {
+    isConnected = false;
+    document.getElementById('walletPopup').classList.add('hidden');
+    document.getElementById('walletAddress').innerHTML = `
+      <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+      <span class="text-sm">Connect Wallet</span>`;
+  }
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     walletAddress = await provider.getSigner().getAddress();
@@ -239,18 +251,6 @@ window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
-document.getElementById('walletAddress').addEventListener('click', async () => {
-  if (!isConnected) {
-    await connectWallet();
-  } else {
-    document.getElementById('walletPopup').classList.toggle('hidden');
-  }
-});
-function disconnectWallet() {
-  isConnected = false;
-  document.getElementById('walletPopup').classList.add('hidden');
-  document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
-}
 </script>
 </body>
 </html>
