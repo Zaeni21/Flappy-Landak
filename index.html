@@ -132,6 +132,12 @@ function update() {
 }
 function showGameOver(score) {
   const overlay = document.createElement('div');
+
+  const submitBtnHTML = onchain ? `
+    <button id="submitBtn" style="padding: 10px 20px;
+      background: #22c55e; border: none; border-radius: 8px; color: white;
+      font-weight: bold; cursor: pointer;">Submit Score</button>` : '';
+
   overlay.innerHTML = `
     <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
@@ -145,13 +151,12 @@ function showGameOver(score) {
           background: #9333ea; border: none; border-radius: 8px; color: white;
           font-weight: bold; cursor: pointer;">Play Again</button>
 
-        ${onchain ? `
-        <button id="submitBtn" style="padding: 10px 20px;
-          background: #22c55e; border: none; border-radius: 8px; color: white;
-          font-weight: bold; cursor: pointer;">Submit Score</button>` : ''}
+        ${submitBtnHTML}
       </div>
     </div>`;
+
   document.body.appendChild(overlay);
+
   if (onchain) {
     document.getElementById("submitBtn").addEventListener("click", async () => {
       const btn = document.getElementById("submitBtn");
