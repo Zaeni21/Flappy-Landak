@@ -178,7 +178,7 @@ async function connectWallet() {
   try {
     await window.ethereum.request({
       method: 'wallet_addEthereumChain',
-      params: [MonadChain] {;
+      params: [{
         chainId: '0x279F',
         chainName: 'Monad Testnet',
         rpcUrls: ['https://testnet-rpc.monad.xyz'],
