@@ -208,10 +208,13 @@ async function connectWallet() {
 }
 async function submitScoreOnchain(score) {
   try {
+    console.log("Submitting score:", score);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(contractAddress, fullABI, signer);
     const tx = await contract.submitScore(score);
+    await tx.wait();
+    console.log("TX sent:", tx.hash);
     await tx.wait();
     console.log("Score submitted!");
   } catch (err) {
