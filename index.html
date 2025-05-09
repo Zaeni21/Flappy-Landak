@@ -251,6 +251,13 @@ window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
+  document.getElementById('walletAddress').addEventListener('click', async () => {
+  if (!isConnected) {
+    await connectWallet();
+  } else {
+    document.getElementById('walletPopup').classList.toggle('hidden');
+  }
+});
 function disconnectWallet() {
   isConnected = false;
   onchain = false;
