@@ -182,6 +182,14 @@ function startOffchain() {
   document.getElementById("mode-selection").style.display = "none";
   update();
 }
+  function startOnchain() {
+  if (!isConnected) {
+    alert("Connect wallet dulu bro!");
+    return;
+  }
+  document.getElementById("mode-selection").style.display = "none";
+  update();
+}
 async function connectWallet() {
   if (!window.ethereum) return alert("Install MetaMask dulu bro");
 
