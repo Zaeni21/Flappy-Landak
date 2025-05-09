@@ -27,7 +27,8 @@
   <h1 class="text-3xl font-bold">Flappy Landak</h1>
   <div class="space-x-4">
     <button onclick="startOffchain()" class="bg-purple-600 px-4 py-2 rounded font-bold">Play Offchain</button>
-    <button onclick="connectWallet()" class="bg-green-600 px-4 py-2 rounded font-bold">Play Onchain</button>
+    <button onclick="connectWallet()">Connect Wallet</button>
+<button onclick="startOnchain()" class="bg-green-600 px-4 py-2 rounded font-bold">Play Onchain</button>
     <button onclick="showLeaderboard()" class="bg-blue-600 px-4 py-2 rounded font-bold">Leaderboard</button>
     <button onclick="mintSkin()" class="bg-yellow-500 px-4 py-2 rounded font-bold">Mint Skin</button>
   </div>
@@ -177,7 +178,7 @@ async function connectWallet() {
   try {
     await window.ethereum.request({
       method: 'wallet_addEthereumChain',
-      params: [{
+      params: [MonadChain] {;
         chainId: '0x279F',
         chainName: 'Monad Testnet',
         rpcUrls: ['https://testnet-rpc.monad.xyz'],
@@ -189,12 +190,17 @@ async function connectWallet() {
     await provider.send("eth_requestAccounts", []);
     walletAddress = await provider.getSigner().getAddress();
     isConnected = true;
-    onchain = true;
-    document.getElementById("mode-selection").style.display = "none";
-    update();
+    alert("Wallet connected. Now click Play Onchain to start!");
   } catch (err) {
+    console.error(err);
     alert("Gagal connect wallet");
   }
+}
+function startOnchain() {
+  if (!isConnected) return alert("Connect wallet dulu bro!");
+  onchain = true;
+  document.getElementById("mode-selection").style.display = "none";
+  update();
 }
 async function submitScoreOnchain(score) {
   try {
