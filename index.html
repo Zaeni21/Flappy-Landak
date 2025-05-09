@@ -295,8 +295,10 @@ function disconnectWallet() {
   onchain = false;
   walletAddress = null;
   document.getElementById('walletPopup').classList.add('hidden');
-  document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
-  location.reload();
+  document.getElementById('walletAddress').innerHTML = `
+    <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+    <span class="text-sm">Connect Wallet</span>
+  `;
 }
 </script>
 </body>
