@@ -157,29 +157,29 @@ function showGameOver(score) {
 
   document.body.appendChild(overlay);
 
-  // Allow only one submit
   if (onchain) {
-    let hasSubmitted = false;
     setTimeout(() => {
-  const btn = document.getElementById("submitBtn");
-  if (!btn) return;
+      const btn = document.getElementById("submitBtn");
+      if (!btn) return;
 
-  let hasSubmitted = false;
-  btn.addEventListener("click", async () => {
-    if (hasSubmitted) return;
-    hasSubmitted = true;
-    btn.disabled = true;
-    btn.innerText = "Submitting...";
-    try {
-      await submitScoreOnchain(score);
-      btn.innerText = "Submitted!";
-      btn.style.background = "#16a34a";
-    } catch (e) {
-      btn.innerText = "Error!";
-      btn.style.background = "#dc2626";
-    }
-  });
-}, 100); // tunggu 100ms supaya tombolnya muncul dulu
+      let hasSubmitted = false;
+      btn.addEventListener("click", async () => {
+        if (hasSubmitted) return;
+        hasSubmitted = true;
+        btn.disabled = true;
+        btn.innerText = "Submitting...";
+        try {
+          await submitScoreOnchain(score);
+          btn.innerText = "Submitted!";
+          btn.style.background = "#16a34a";
+        } catch (e) {
+          btn.innerText = "Error!";
+          btn.style.background = "#dc2626";
+        }
+      });
+    }, 100);
+  }
+}
 function startOffchain() {
   onchain = false;
   document.getElementById("mode-selection").style.display = "none";
