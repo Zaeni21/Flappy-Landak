@@ -52,6 +52,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let onchain = false;
 let walletAddress = null;
+let isConnected = false;
 const contractAddress = "0x228a78f7484dcDD40C33C9Bfb9F7eFEb3d2655D6";
 const fullABI = [
   {
@@ -184,10 +185,21 @@ async function connectWallet() {
         blockExplorerUrls: ['https://testnet.monadexplorer.com']
       }]
     });
+
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
-    walletAddress = await provider.getSigner().getAddress();
+    const signer = provider.getSigner();
+    walletAddress = await signer.getAddress();
     onchain = true;
+    isConnected = true;
+
+    const displayAddress = walletAddress.slice(0, 6) + "..." + walletAddress.slice(-3);
+    document.getElementById("walletAddress").innerHTML = `
+      <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+      <span class="text-sm">${displayAddress}</span>
+    `;
+    document.getElementById("walletPopup").classList.remove("hidden");
+
     document.getElementById("mode-selection").style.display = "none";
     update();
   } catch (err) {
@@ -239,17 +251,13 @@ window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
-document.getElementById('walletAddress').addEventListener('click', async () => {
-  if (!isConnected) {
-    await connectWallet();
-  } else {
-    document.getElementById('walletPopup').classList.toggle('hidden');
-  }
-});
 function disconnectWallet() {
   isConnected = false;
+  onchain = false;
+  walletAddress = null;
   document.getElementById('walletPopup').classList.add('hidden');
   document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
+  location.reload();
 }
 </script>
 </body>
