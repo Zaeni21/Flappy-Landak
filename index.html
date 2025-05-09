@@ -142,7 +142,8 @@ function update() {
 function showGameOver(score) {
   if (gameOver) return;  // Stop kalau udah game over
   gameOver = true;       // Set status game over sekali aja
-  const overlay = document.createElement('div');
+  const overlays = document.querySelectorAll("body > div[style*='position: fixed']");
+overlays.forEach(el => el.remove());
 
   const submitBtnHTML = onchain ? `
     <button id="submitBtn" style="padding: 10px 20px;
@@ -318,8 +319,8 @@ function disconnectWallet() {
 
   document.getElementById("score").innerText = "Score: 0";
 
-  const overlay = document.querySelector("body > div[style*='position: fixed']");
-  if (overlay) overlay.remove();
+  const overlays = document.querySelectorAll("body > div[style*='position: fixed']");
+  overlays.forEach(el => el.remove());
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   requestAnimationFrame(update);
