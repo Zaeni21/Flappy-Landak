@@ -160,23 +160,26 @@ function showGameOver(score) {
   // Allow only one submit
   if (onchain) {
     let hasSubmitted = false;
-    const btn = document.getElementById("submitBtn");
-    btn.addEventListener("click", async () => {
-      if (hasSubmitted) return;
-      hasSubmitted = true;
-      btn.disabled = true;
-      btn.innerText = "Submitting...";
-      try {
-        await submitScoreOnchain(score);
-        btn.innerText = "Submitted!";
-        btn.style.background = "#16a34a";
-      } catch (e) {
-        btn.innerText = "Error!";
-        btn.style.background = "#dc2626";
-      }
-    });
-  }
-}
+    setTimeout(() => {
+  const btn = document.getElementById("submitBtn");
+  if (!btn) return;
+
+  let hasSubmitted = false;
+  btn.addEventListener("click", async () => {
+    if (hasSubmitted) return;
+    hasSubmitted = true;
+    btn.disabled = true;
+    btn.innerText = "Submitting...";
+    try {
+      await submitScoreOnchain(score);
+      btn.innerText = "Submitted!";
+      btn.style.background = "#16a34a";
+    } catch (e) {
+      btn.innerText = "Error!";
+      btn.style.background = "#dc2626";
+    }
+  });
+}, 100); // tunggu 100ms supaya tombolnya muncul dulu
 function startOffchain() {
   onchain = false;
   document.getElementById("mode-selection").style.display = "none";
