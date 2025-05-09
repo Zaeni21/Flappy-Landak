@@ -129,6 +129,7 @@ function update() {
   requestAnimationFrame(update);
 }
 
+
 function showGameOver(score) {
   const overlay = document.createElement("div");
   overlay.innerHTML = `
@@ -144,7 +145,9 @@ function showGameOver(score) {
     </div>
   `;
   document.body.appendChild(overlay);
+
   document.getElementById("playAgainBtn").onclick = () => location.reload();
+
   if (onchain) {
     const btn = document.getElementById("submitBtn");
     btn.addEventListener("click", async () => {
@@ -155,6 +158,13 @@ function showGameOver(score) {
         btn.innerText = "Submitted!";
         btn.style.background = "#16a34a";
       } catch (e) {
+        btn.innerText = "Error!";
+        btn.style.background = "#dc2626";
+      }
+    });
+  }
+}
+ catch (e) {
         btn.innerText = "Error!";
         btn.style.background = "#dc2626";
       }
