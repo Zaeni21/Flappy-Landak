@@ -149,20 +149,18 @@ function showGameOver(score) {
 
   if (onchain) {
     const btn = document.getElementById("submitBtn");
-    btn.addEventListener("click", () => submitScoreOnchain(score));
-  }
-}
     btn.disabled = true;
-    btn.innerText = "Submitting...";
-    try {
-      await submitScoreOnchain(score);
-      btn.innerText = "Submitted!";
-      btn.style.background = "#16a34a";
-    } catch (e) {
-      btn.innerText = "Error!";
-      btn.style.background = "#dc2626";
-    }
-  });
+      btn.innerText = "Submitting...";
+      try {
+        await submitScoreOnchain(score);
+        btn.innerText = "Submitted!";
+        btn.style.background = "#16a34a";
+      } catch (e) {
+        btn.innerText = "Error!";
+        btn.style.background = "#dc2626";
+      }
+    });
+  }
 }
   function startOffchain() {
   onchain = false;
