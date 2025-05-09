@@ -147,20 +147,20 @@ function showGameOver(score) {
     </div>`;
   document.body.appendChild(overlay);
 
-  if (onchain) {
-    const btn = document.getElementById("submitBtn");
+ if (onchain) {
+  const btn = document.getElementById("submitBtn");
+  btn.addEventListener("click", async () => {
     btn.disabled = true;
-      btn.innerText = "Submitting...";
-      try {
-        await submitScoreOnchain(score);
-        btn.innerText = "Submitted!";
-        btn.style.background = "#16a34a";
-      } catch (e) {
-        btn.innerText = "Error!";
-        btn.style.background = "#dc2626";
-      }
-    });
-  }
+    btn.innerText = "Submitting...";
+    try {
+      await submitScoreOnchain(score);
+      btn.innerText = "Submitted!";
+      btn.style.background = "#16a34a";
+    } catch (e) {
+      btn.innerText = "Error!";
+      btn.style.background = "#dc2626";
+    }
+  });
 }
   function startOffchain() {
   onchain = false;
