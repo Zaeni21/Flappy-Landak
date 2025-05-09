@@ -138,14 +138,8 @@ function showGameOver(score) {
   if (gameOver) return;  // Stop kalau udah game over
   gameOver = true;       // Set status game over sekali aja
   const overlay = document.createElement('div');
-overlay.id = "game-over-overlay";
-overlay.innerHTML = `
-  <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
-    justify-content: center; align-items: center; color: white; font-family: sans-serif; z-index: 9999;">
-    ...
-  </div>`;onchain ? ;
-  
+
+  const submitBtnHTML = onchain ? `
     <button id="submitBtn" style="padding: 10px 20px;
       background: #22c55e; border: none; border-radius: 8px; color: white;
       font-weight: bold; cursor: pointer;">Submit Score</button>` : '';
@@ -159,7 +153,7 @@ overlay.innerHTML = `
       <p style="font-size: 1.2em; margin-bottom: 20px;">Score: ${score}</p>
 
       <div class="flex space-x-4">
-        <button onclick="restartGame()" style="padding: 10px 20px;
+        <button onclick="location.reload()" style="padding: 10px 20px;
           background: #9333ea; border: none; border-radius: 8px; color: white;
           font-weight: bold; cursor: pointer;">Play Again</button>
 
@@ -303,23 +297,6 @@ function disconnectWallet() {
   document.getElementById('walletPopup').classList.add('hidden');
   document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
   location.reload();
-}
-  function restartGame() {
-  gameOver = false;
-  hasSubmitted = false;
-  score = 0;
-  frame = 0;
-  pipes = [];
-  bird.y = canvas.height / 2;
-  bird.velocity = 0;
-
-  document.getElementById("score").innerText = "Score: 0";
-
-  const overlay = document.querySelector("body > div[style*='position: fixed']");
-  if (overlay) overlay.remove();
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  requestAnimationFrame(update);
 }
 </script>
 </body>
