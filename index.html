@@ -140,12 +140,15 @@ function update() {
   requestAnimationFrame(update);
 }
 function showGameOver(score) {
-  if (gameOver) return;  // Stop kalau udah game over
-  gameOver = true;       // Set status game over sekali aja
-  const overlays = document.querySelectorAll("body > div[style*='position: fixed']");
-overlays.forEach(el => el.remove());
+  if (gameOver) return;
+  gameOver = true;
 
-  const submitBtnHTML = onchain ? `
+  const overlays = document.querySelectorAll("body > div[style*='position: fixed']");
+  overlays.forEach(el => el.remove());
+
+  const overlay = document.createElement('div'); // << INI YANG KURANG BRO!
+
+  const submitBtnHTML = ... `
     <button id="submitBtn" style="padding: 10px 20px;
       background: #22c55e; border: none; border-radius: 8px; color: white;
       font-weight: bold; cursor: pointer;">Submit Score</button>` : '';
