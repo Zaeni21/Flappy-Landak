@@ -52,6 +52,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let onchain = false;
 let walletAddress = null;
+let isConnected = false;
 const contractAddress = "0x228a78f7484dcDD40C33C9Bfb9F7eFEb3d2655D6";
 const fullABI = [
   {
@@ -187,6 +188,7 @@ async function connectWallet() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     walletAddress = await provider.getSigner().getAddress();
+    isConnected = true;
     onchain = true;
     document.getElementById("mode-selection").style.display = "none";
     update();
