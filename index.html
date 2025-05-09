@@ -4,11 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Flappy Landak</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-</head>
-<body class="bg-black text-white min-h-screen font-sans relative overflow-hidden">
+  <style>
+  body {
+    background: linear-gradient(180deg, #000000, #0f172a, #1e293b);
+    background-size: 100% 300%;
+    animation: bgMove 20s infinite linear;
+  }
 
+  @keyframes bgMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+  }
+</style>
+</head>
+<body class="bg-black text-white min-h-screen relative overflow-hidden" style="font-family: 'Press Start 2P', monospace;">
+  
 <!-- Wallet Connect -->
 <div class="absolute top-4 right-4 z-50">
   <div class="flex items-center space-x-2 bg-gray-900 px-3 py-1 rounded-full cursor-pointer" id="walletAddress">
@@ -25,11 +37,14 @@
 <div id="mode-selection" class="text-center pt-24 space-y-4 z-10 relative">
   <h1 class="text-3xl font-bold">Flappy Landak</h1>
   <div class="space-x-4">
-    <button onclick="startOffchain()" class="bg-purple-600 px-4 py-2 rounded font-bold">Play Offchain</button>
-    <button onclick="startOnchain()" class="bg-green-600 px-4 py-2 rounded font-bold">Play Onchain</button>
-    <button onclick="showLeaderboard()" class="bg-blue-600 px-4 py-2 rounded font-bold">Leaderboard</button>
-    <button onclick="mintSkin()" class="bg-yellow-500 px-4 py-2 rounded font-bold">Mint Skin</button>
-  </div>
+  <button onclick="startOffchain()" class="bg-purple-600 hover:bg-purple-700 transition-all duration-200 px-4 py-2 rounded-xl font-bold shadow-md">Play Offchain</button>
+  
+  <button onclick="startOnchain()" class="bg-green-600 hover:bg-green-700 transition-all duration-200 px-4 py-2 rounded-xl font-bold shadow-md">Play Onchain</button>
+  
+  <button onclick="showLeaderboard()" class="bg-blue-600 hover:bg-blue-700 transition-all duration-200 px-4 py-2 rounded-xl font-bold shadow-md">Leaderboard</button>
+  
+  <button onclick="mintSkin()" class="bg-yellow-500 hover:bg-yellow-600 transition-all duration-200 px-4 py-2 rounded-xl font-bold shadow-md">Mint Skin</button>
+</div>
   <div id="score" class="text-xl font-semibold mt-4">Score: 0</div>
 </div>
 
