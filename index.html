@@ -167,6 +167,11 @@ function showGameOver(score) {
     });
   }
 }
+  function startOffchain() {
+  onchain = false;
+  document.getElementById("mode-selection").style.display = "none";
+  update();
+}
 async function connectWallet() {
   try {
     await window.ethereum.request({
