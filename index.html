@@ -138,8 +138,10 @@ function showGameOver(score) {
   if (gameOver) return;  // Stop kalau udah game over
   gameOver = true;       // Set status game over sekali aja
   const overlay = document.createElement('div');
-
-  const submitBtnHTML = onchain ? `
+overlay.id = "game-over-overlay";
+overlay.innerHTML = `
+  <div style="position: fixed; top: 0; left: 0; ...">
+  
     <button id="submitBtn" style="padding: 10px 20px;
       background: #22c55e; border: none; border-radius: 8px; color: white;
       font-weight: bold; cursor: pointer;">Submit Score</button>` : '';
