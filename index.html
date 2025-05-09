@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flappy Landak v2</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body class="bg-black text-white min-h-screen font-sans relative overflow-hidden">
+
+  <!-- Wallet Connect Button -->
+  <div class="absolute top-4 right-4 z-50">
+    <div class="flex items-center space-x-2 bg-gray-900 px-3 py-1 rounded-full cursor-pointer" id="walletAddress">
+      <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+      <span class="text-sm">Connect Wallet</span>
+    </div>
+    <div class="absolute right-0 mt-2 bg-gray-800 border border-gray-600 p-3 rounded hidden z-50" id="walletPopup">
+      <p class="text-green-400 text-sm mb-2">Connected</p>
+      <button class="bg-red-600 hover:bg-red-700 px-2 py-1 text-xs rounded" onclick="disconnectWallet()">Disconnect</button>
+    </div>
+  </div>
+
+  <!-- Game UI -->
+  <div class="text-center pt-24 space-y-4 z-10 relative">
+    <h1 class="text-3xl font-bold">Flappy Landak v2</h1>
+    <div class="space-x-4">
+      <button onclick="startOffchain()" class="bg-purple-600 px-4 py-2 rounded font-bold">Play Offchain</button>
+      <button onclick="connectWallet()" class="bg-green-600 px-4 py-2 rounded font-bold">Play Onchain</button>
+      <button onclick="showLeaderboard()" class="bg-blue-600 px-4 py-2 rounded font-bold">Leaderboard</button>
+      <button onclick="mintSkin()" class="bg-yellow-500 px-4 py-2 rounded font-bold">Mint Skin</button>
+    </div>
+    <div id="score" class="text-xl font-semibold mt-4">Score: 0</div>
+  </div>
+
+  <!-- Game Canvas -->
+  <canvas id="gameCanvas" class="absolute inset-0 w-full h-full z-0"></canvas>
+
+  <!-- Leaderboard Popup -->
+  <div id="leaderboard-popup" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 p-6 rounded shadow-lg z-50 w-80">
+    <h2 class="text-lg font-bold mb-4">Top Players</h2>
+    <ul id="leaderboard-list" class="space-y-1 text-sm"></ul>
+    <button onclick="document.getElementById('leaderboard-popup').classList.add('hidden')" class="mt-4 bg-purple-700 px-3 py-1 rounded">Close</button>
+  </div>
+
+  <!-- Script Placeholder (Game Logic & Wallet) -->
+  <script>
+    // Placeholder wallet logic
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const monadChain = {
+      chainId: '0x279F',
+      chainName: 'Monad Testnet',
+      rpcUrls: ['https://testnet-rpc.monad.xyz'],
+      nativeCurrency: { name: 'Monad', symbol: 'MON', decimals: 18 },
+      blockExplorerUrls: ['https://testnet.monadexplorer.com']
+    };
+
+    let isConnected = false;
+    let walletAddress = null;
+
+    async function connectWallet() {
+      try {
+        await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [monadChain] });
+        await provider.send("eth_requestAccounts", []);
+        walletAddress = await signer.getAddress();
+        document.getElementById('walletAddress').innerHTML = `
+          <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+          <span class="text-sm">${walletAddress.slice(0, 5)}...${walletAddress.slice(-3)}</span>`;
+        document.getElementById('walletPopup').classList.remove('hidden');
+        isConnected = true;
+      } catch (err) {
+        alert("Failed to connect");
+        console.error(err);
+      }
+    }
+
+    function disconnectWallet() {
+      isConnected = false;
+      document.getElementById('walletPopup').classList.add('hidden');
+      document.getElementById('walletAddress').innerHTML = `
+        <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+        <span class="text-sm">Connect Wallet</span>`;
+    }
+
+    document.getElementById('walletAddress').addEventListener('click', () => {
+      if (!isConnected) {
+        connectWallet();
+      } else {
+        document.getElementById('walletPopup').classList.toggle('hidden');
+      }
+    });
+
+    function startOffchain() {
+      alert("Starting offline game... (placeholder)");
+    }
+
+    function showLeaderboard() {
+      document.getElementById("leaderboard-popup").classList.remove("hidden");
+      // fetch top scores from contract (placeholder)
+    }
+
+    function mintSkin() {
+      alert("Minting skin feature coming soon...");
+    }
+  </script>
+</body>
+</html>
