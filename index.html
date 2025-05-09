@@ -146,7 +146,7 @@ function showGameOver(score) {
   const overlays = document.querySelectorAll("body > div[style*='position: fixed']");
   overlays.forEach(el => el.remove());
 
-  const overlay = document.createElement('div'); // << INI YANG KURANG BRO!
+  const overlay = document.createElement('div'); // << ini baris penting yang hilang
 
   const submitBtnHTML = ... `
     <button id="submitBtn" style="padding: 10px 20px;
