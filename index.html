@@ -157,9 +157,13 @@ function showGameOver(score) {
 
   document.body.appendChild(overlay);
 
+  // Allow only one submit
   if (onchain) {
-    document.getElementById("submitBtn").addEventListener("click", async () => {
-      const btn = document.getElementById("submitBtn");
+    let hasSubmitted = false;
+    const btn = document.getElementById("submitBtn");
+    btn.addEventListener("click", async () => {
+      if (hasSubmitted) return;
+      hasSubmitted = true;
       btn.disabled = true;
       btn.innerText = "Submitting...";
       try {
@@ -179,8 +183,10 @@ function startOffchain() {
   update();
 }
 async function connectWallet() {
+  if (!window.ethereum) return alert("Install MetaMask dulu bro");
+
   try {
-    await window.ethereum.request({
+    await ethereum.request({
       method: 'wallet_addEthereumChain',
       params: [{
         chainId: '0x279F',
@@ -193,21 +199,20 @@ async function connectWallet() {
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
-    const signer = provider.getSigner();
-    walletAddress = await signer.getAddress();
+    walletAddress = await provider.getSigner().getAddress();
     onchain = true;
     isConnected = true;
 
+    // Update tampilan dompet
     const displayAddress = walletAddress.slice(0, 6) + "..." + walletAddress.slice(-3);
     document.getElementById("walletAddress").innerHTML = `
       <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
-      <span class="text-sm">${displayAddress}</span>
-    `;
+      <span class="text-sm">${displayAddress}</span>`;
     document.getElementById("walletPopup").classList.remove("hidden");
 
-    document.getElementById("mode-selection").style.display = "none";
-    update();
+    alert("Wallet connected! Klik Play Onchain untuk mulai game.");
   } catch (err) {
+    console.error(err);
     alert("Gagal connect wallet");
   }
 }
