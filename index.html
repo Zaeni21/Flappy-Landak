@@ -153,7 +153,7 @@ function showGameOver(score) {
       <p style="font-size: 1.2em; margin-bottom: 20px;">Score: ${score}</p>
 
       <div class="flex space-x-4">
-        <button onclick="location.reload()" style="padding: 10px 20px;
+        <button onclick="restartGame()" style="padding: 10px 20px;
           background: #9333ea; border: none; border-radius: 8px; color: white;
           font-weight: bold; cursor: pointer;">Play Again</button>
 
@@ -297,6 +297,23 @@ function disconnectWallet() {
   document.getElementById('walletPopup').classList.add('hidden');
   document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
   location.reload();
+}
+  function restartGame() {
+  gameOver = false;
+  hasSubmitted = false;
+  score = 0;
+  frame = 0;
+  pipes = [];
+  bird.y = canvas.height / 2;
+  bird.velocity = 0;
+
+  document.getElementById("score").innerText = "Score: 0";
+
+  const overlay = document.querySelector("body > div[style*='position: fixed']");
+  if (overlay) overlay.remove();
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  requestAnimationFrame(update);
 }
 </script>
 </body>
