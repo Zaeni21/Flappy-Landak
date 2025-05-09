@@ -313,7 +313,9 @@ function disconnectWallet() {
   const overlay = document.querySelector("body > div[style*='position: fixed']");
   if (overlay) overlay.remove();
 
-  update();
+  // Tambahin 2 baris ini bro!
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // bersihin canvas
+  requestAnimationFrame(update); // restart loop
 }
 </script>
 </body>
