@@ -53,8 +53,9 @@ let onchain = false;
 let walletAddress = null;
 let isConnected = false;
 
-  let gameOver = false;
+let gameOver = false;
 let hasSubmitted = false;
+let looping = true;
 const contractAddress = "0x228a78f7484dcDD40C33C9Bfb9F7eFEb3d2655D6";
 const fullABI = [
   {
@@ -101,7 +102,11 @@ function drawPipes() {
   });
 }
 function update() {
-  if (gameOver) return;
+  if (gameOver || !looping) return;
+
+  // lanjut game logic...
+  requestAnimationFrame(update);
+}
   
   frame++;
   bird.velocity += bird.gravity;
@@ -301,21 +306,23 @@ function disconnectWallet() {
   `;
 }
   function restartGame() {
+  looping = true;
   gameOver = false;
   hasSubmitted = false;
+
   score = 0;
   frame = 0;
   pipes = [];
   bird.y = canvas.height / 2;
   bird.velocity = 0;
+
   document.getElementById("score").innerText = "Score: 0";
 
   const overlay = document.querySelector("body > div[style*='position: fixed']");
   if (overlay) overlay.remove();
 
-  // Tambahin 2 baris ini bro!
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // bersihin canvas
-  requestAnimationFrame(update); // restart loop
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  requestAnimationFrame(update);
 }
 </script>
 </body>
