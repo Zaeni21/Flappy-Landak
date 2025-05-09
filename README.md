@@ -1,35 +1,35 @@
 # Flappy Landak
 
-Flappy Landak adalah game Web3 berbasis browser dengan integrasi onchain leaderboard. Pemain dapat bermain dalam dua mode: **offchain** atau **onchain**, dan mencatat skor tertinggi mereka langsung ke blockchain!
+**Flappy Landak** is a browser-based Web3 game featuring an onchain leaderboard. Players can choose to play in **offchain** or **onchain** mode, and submit their high scores directly to the blockchain!
 
-## Fitur
+## Features
 
-- **Connect Wallet**: Mendukung EVM wallet seperti MetaMask dan OKX Wallet.
-- **Play Offchain**: Main tanpa interaksi blockchain.
-- **Play Onchain**: Skor tercatat ke leaderboard onchain.
-- **Submit Score**: Kirim skor ke smart contract.
-- **Leaderboard**: Lihat Top 10 pemain terbaik.
-- **Mint Skin**: (Opsional) Tambahkan NFT skin custom untuk karakter landak kamu.
+- **Connect Wallet**: Supports EVM wallets like MetaMask and OKX Wallet.
+- **Play Offchain**: Casual mode without blockchain interaction.
+- **Play Onchain**: Compete for the top score onchain.
+- **Submit Score**: Send your score to the smart contract.
+- **Leaderboard**: Displays the top 10 highest scoring players.
+- **Mint Skin**: (Optional) Allows players to mint and use NFT skins.
 
-## Cara Main
+## How to Play
 
-1. Buka website: [https://ikiepep.vercel.app](https://ikiepep.vercel.app)
-2. Klik **Connect Wallet** untuk mulai mode onchain.
-3. Pilih **Play Onchain** atau **Play Offchain**.
-4. Capai skor tertinggi dan klik **Submit Score** saat game over.
-5. Lihat nama kamu di leaderboard!
+1. Open the site: [https://ikiepep.vercel.app](https://ikiepep.vercel.app)
+2. Click **Connect Wallet** to start onchain mode.
+3. Choose **Play Onchain** or **Play Offchain**.
+4. After the game ends, click **Submit Score** to record your score.
+5. Open the **Leaderboard** to see your rank!
 
 ## Smart Contract
 
 - **Network**: Monad Testnet
-- **Contract Address**: `0x...` (isi dengan address leaderboard kamu)
-- **Fungsi Penting**:
+- **Contract Address**: `0x...` *(Replace with actual address)*
+- **Key Functions**:
   - `submitScore(uint256 score)`
   - `getTopPlayers()`
 
-## Reward Sistem
+## Weekly Rewards
 
-Top 10 pemain setiap minggu akan mendapatkan hadiah token:
+The top 10 players each week will receive token rewards:
 
 | Rank | Reward |
 |------|--------|
@@ -44,20 +44,18 @@ Top 10 pemain setiap minggu akan mendapatkan hadiah token:
 | 9    | 5%     |
 | 10   | 4%     |
 
-> Distribusi dilakukan manual oleh tim atau via smart contract.
+> Rewards are distributed manually or via smart contract.
 
 ## Tech Stack
 
-- HTML5 Canvas
+- HTML5 Canvas Game Engine
 - JavaScript + Ethers.js
-- TailwindCSS
-- Solidity (Leaderboard Contract)
-- Deployed on Vercel
+- TailwindCSS for UI
+- Solidity (on Monad Testnet)
+- Deployed with Vercel
 
-## Dev & Kontribusi
+## Developer & Contributions
 
-Feel free to fork or pull request!
+Feel free to fork, clone, or submit a PR. Built by [@JAWIRNFT](https://twitter.com/JAWIRNFT) for the Web3 gaming community.
 
 ---
-
-Built by [@JAWIRNFT](https://twitter.com/JAWIRNFT) with love for the Web3 gaming community.
