@@ -40,10 +40,16 @@
 <div id="leaderboard-popup" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 p-6 rounded shadow-lg z-50 w-80">
   <h2 class="text-lg font-bold mb-4">Top Players</h2>
   <ul id="leaderboard-list" class="space-y-1 text-sm"></ul>
-  <button onclick="document.getElementById('leaderboard-popup').classList.add('hidden')" class="mt-4 bg-purple-700 px-3 py-1 rounded">Close</button>
+
+  <!-- Tombol distribusi khusus admin -->
   <div id="admin-distribute" class="mt-4 hidden">
-  <button onclick="distributeRewardsFromContract()" class="bg-green-600 px-4 py-2 rounded font-bold ml-2">
-    Distribusi Reward
+    <button onclick="distributeRewardsFromContract()" class="bg-green-600 px-4 py-2 rounded font-bold ml-2">
+      Distribusi Reward
+    </button>
+  </div>
+
+  <button onclick="document.getElementById('leaderboard-popup').classList.add('hidden')" class="mt-4 bg-purple-700 px-3 py-1 rounded">
+    Close
   </button>
 </div>
 
@@ -81,6 +87,13 @@ const fullABI = [
     "name": "submitScore",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "distributeRewards",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   }
 ];
@@ -259,42 +272,38 @@ async function showLeaderboard() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const userAddress = await signer.getAddress();
-    const contractAddress = "0x228a78f7484dcDD40C33C9Bfb9F7eFEb3d2655D6";
-const fullABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"distributeRewards","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"getTopPlayers","outputs":[{"components":[{"internalType":"address","name":"addr","type":"address"},{"internalType":"uint256","name":"score","type":"uint256"}],"internalType":"struct Leaderboard.Player[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"scores","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"newScore","type":"uint256"}],"name":"submitScore","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"topPlayers","outputs":[{"internalType":"address","name":"addr","type":"address"},{"internalType":"uint256","name":"score","type":"uint256"}],"stateMutability":"view","type":"function"}]
-async function distributeRewardsFromContract() {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const userAddress = await signer.getAddress();
 
-  if (userAddress.toLowerCase() === "0x408e68f9dce5a0cd175cd7c7eefb634d5f03a257") {
-  document.getElementById("admin-distribute").classList.remove("hidden");
-}
-
-  const contract = new ethers.Contract(contractAddress, fullABI, signer);
-
-  try {
-    const tx = await contract.distributeRewards({ value: ethers.utils.parseEther("0") });
-    await tx.wait();
-    alert("Reward berhasil didistribusikan dari contract!");
-  } catch (err) {
-    console.error("Gagal distribusi:", err);
-    alert("Distribusi gagal.");
-  }
-}
     const contract = new ethers.Contract(contractAddress, fullABI, provider);
     const players = await contract.getTopPlayers();
+
     const ul = document.getElementById("leaderboard-list");
     ul.innerHTML = "";
+
     players.forEach((player, index) => {
       const li = document.createElement("li");
       const shortAddr = player.addr.slice(0, 6) + "..." + player.addr.slice(-4);
       li.innerHTML = `${index + 1}. ${shortAddr} - ${player.score}`;
+
       if (player.addr.toLowerCase() === userAddress.toLowerCase()) {
         li.style.color = "#22d3ee";
         li.style.fontWeight = "bold";
       }
+
       ul.appendChild(li);
     });
+
+    // Tampilkan leaderboard popup
+    document.getElementById("leaderboard-popup").classList.remove("hidden");
+
+    // Tampilkan tombol distribusi hanya jika wallet = admin
+    if (userAddress.toLowerCase() === "0x408e68f9dce5a0cd175cd7c7eefb634d5f03a257") {
+      document.getElementById("admin-distribute").classList.remove("hidden");
+    }
+  } catch (err) {
+    console.error("Gagal ambil leaderboard:", err);
+    alert("Gagal ambil leaderboard!");
+  }
+}
     document.getElementById("leaderboard-popup").classList.remove("hidden");
   } catch (err) {
     alert("Gagal ambil leaderboard!");
