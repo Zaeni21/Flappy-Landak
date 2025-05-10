@@ -139,21 +139,6 @@ function showGameOver(score) {
   gameOver = true;       // Set status game over sekali aja
   const overlay = document.createElement('div');
 }
-  function restartGame() {
-  hasSubmitted = false;
-  score = 0;
-  frame = 0;
-  pipes = [];
-  bird.y = canvas.height / 2;
-  bird.velocity = 0;
-  gameOver = false;
-
-  const overlay = document.querySelector("body > div[style*='position: fixed']");
-  if (overlay) overlay.remove();
-
-  document.getElementById("score").innerText = "Score: 0";
-  update();
-}
   const submitBtnHTML = onchain ? `
     <button id="submitBtn" style="padding: 10px 20px;
       background: #22c55e; border: none; border-radius: 8px; color: white;
@@ -200,6 +185,21 @@ function showGameOver(score) {
       });
     }, 100);
   }
+}
+  function restartGame() {
+  hasSubmitted = false;
+  score = 0;
+  frame = 0;
+  pipes = [];
+  bird.y = canvas.height / 2;
+  bird.velocity = 0;
+  gameOver = false;
+
+  const overlay = document.querySelector("body > div[style*='position: fixed']");
+  if (overlay) overlay.remove();
+
+  document.getElementById("score").innerText = "Score: 0";
+  update();
 }
 function startOffchain() {
   onchain = false;
