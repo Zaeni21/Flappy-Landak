@@ -159,12 +159,13 @@ function showGameOver(score) {
   document.body.appendChild(overlay);
 
   let hasSubmitted = false;
+let autoRestart; // <-- pindahin di luar biar bisa keakses
 
-  // Tombol submit score logic
-  if (onchain) {
-    setTimeout(() => {
-      const btn = document.getElementById("submitBtn");
-      if (!btn) return;
+if (onchain) {
+  const btnCheck = setInterval(() => {
+    const btn = document.getElementById("submitBtn");
+    if (btn) {
+      clearInterval(btnCheck);
 
       btn.addEventListener("click", async () => {
         if (hasSubmitted) return;
@@ -181,14 +182,14 @@ function showGameOver(score) {
           btn.style.background = "#dc2626";
         }
       });
-    }, 100);
-  }
-
-  // Auto-restart setelah 3 detik kalau gak klik submit
-  const autoRestart = setTimeout(() => {
-    if (!hasSubmitted) restartGame();
-  }, 3000);
+    }
+  }, 100);
 }
+
+// Auto-restart setelah 3 detik kalau gak klik submit
+autoRestart = setTimeout(() => {
+  if (!hasSubmitted) restartGame();
+}, 3000);
 function startOffchain() {
   onchain = false;
   document.getElementById("mode-selection").style.display = "none";
