@@ -305,7 +305,12 @@ async function showLeaderboard() {
   }
 }
     document.getElementById("leaderboard-popup").classList.remove("hidden");
+
+    if (userAddress.toLowerCase() === "0x408e68f9dce5a0cd175cd7c7eefb634d5f03a257") {
+      document.getElementById("admin-distribute").classList.remove("hidden");
+    }
   } catch (err) {
+    console.error("Gagal ambil leaderboard:", err);
     alert("Gagal ambil leaderboard!");
   }
 }
