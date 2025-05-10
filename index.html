@@ -24,14 +24,15 @@
 <!-- Game UI -->
 <div id="mode-selection" class="text-center pt-24 space-y-4 z-10 relative">
 
-  <!-- Sign In Button -->
+  <!-- Tombol Sign In -->
   <button onclick="signInAndCheckNickname()" class="bg-white text-black px-4 py-2 rounded font-bold shadow-md">
     Sign In
   </button>
 
-  <!-- Nickname Display -->
+  <!-- TAMPILAN NICKNAME (tempel di sini bro) -->
   <p id="nicknameDisplay" class="text-white text-lg font-semibold hidden"></p>
 
+  <!-- Judul Game -->
   <h1 class="text-3xl font-bold">Flappy Landak</h1>
   <div class="space-x-4">
     <button onclick="startOffchain()" class="bg-purple-600 px-4 py-2 rounded font-bold">Play Offchain</button>
@@ -383,17 +384,31 @@ function disconnectWallet() {
   if (typeof window.ethereum === 'undefined') return;
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const accounts = await provider.listAccounts();
-  if (accounts.length === 0) return;
+  let accounts = await provider.listAccounts();
+
+  if (accounts.length === 0) {
+    try {
+      await provider.send("eth_requestAccounts", []);
+      accounts = await provider.listAccounts(); // ambil ulang setelah connect
+    } catch {
+      console.log("Wallet not connected.");
+      return;
+    }
+  }
 
   const address = accounts[0];
+  console.log("Auto-load address:", address);
+
   const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, provider);
   const nickname = await contract.getNickname(address);
 
+  console.log("Nickname:", nickname);
+
   if (nickname && nickname.length > 0) {
+    console.log("Showing nickname:", nickname);
     showNickname(nickname);
   }
-  }
+}
   autoLoadNickname();
 </script>
 </body>
