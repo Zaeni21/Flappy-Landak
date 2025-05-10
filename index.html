@@ -347,9 +347,9 @@ function disconnectWallet() {
       const nickname = await contract.getNickname(address);
 
       if (nickname && nickname.length > 0) {
-        showNickname(nickname);
-      } else {
-        const input = prompt("Choose your nickname:");
+  showNickname(nickname);
+} else {
+  const input = prompt("Choose your nickname:");
         if (input && input.length > 0) {
           const tx = await contract.setNickname(input);
           await tx.wait();
