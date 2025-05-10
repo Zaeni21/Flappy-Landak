@@ -200,6 +200,7 @@ function startOffchain() {
   update();
 }
 async function connectWallet() {
+async function connectWalletAndSign() {
   if (!window.ethereum) return alert("Install MetaMask dulu bro");
 
   try {
@@ -213,13 +214,32 @@ async function connectWallet() {
         blockExplorerUrls: ['https://testnet.monadexplorer.com']
       }]
     });
-
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     walletAddress = await provider.getSigner().getAddress();
     onchain = true;
     isConnected = true;
 
+    const displayAddress = walletAddress.slice(0, 6) + "..." + walletAddress.slice(-3);
+    document.getElementById("walletAddress").innerHTML = `
+      <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+      <span class="text-sm">${displayAddress}</span>`;
+    document.getElementById("walletPopup").classList.remove("hidden");
+    document.getElementById('walletAddress').addEventListener('click', async () => {
+  if (!isConnected) {
+    await connectWalletAndSign();
+  } else {
+    document.getElementById('walletPopup').classList.toggle('hidden');
+  }
+});
+    // Langsung lanjut ke nickname
+    await signInAndCheckNickname();
+
+  } catch (err) {
+    console.error(err);
+    alert("Gagal connect wallet");
+  }
+}
     // Update tampilan dompet
     const displayAddress = walletAddress.slice(0, 6) + "..." + walletAddress.slice(-3);
     document.getElementById("walletAddress").innerHTML = `
@@ -285,7 +305,7 @@ window.addEventListener("resize", () => {
 });
 document.getElementById('walletAddress').addEventListener('click', async () => {
   if (!isConnected) {
-    await connectWallet();
+    await connectWalletAndSign(); // langsung connect + sign nickname
   } else {
     document.getElementById('walletPopup').classList.toggle('hidden');
   }
