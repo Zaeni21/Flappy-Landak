@@ -186,6 +186,19 @@ function showGameOver(score) {
     }, 100);
   }
 }
+function startOffchain() {
+  onchain = false;
+  document.getElementById("mode-selection").style.display = "none";
+  update();
+}
+  function startOnchain() {
+  if (!isConnected) {
+    alert("Connect wallet dulu bro!");
+    return;
+  }
+  document.getElementById("mode-selection").style.display = "none";
+  update();
+}
   function restartGame() {
   hasSubmitted = false;
   score = 0;
@@ -200,20 +213,7 @@ function showGameOver(score) {
 
   document.getElementById("score").innerText = "Score: 0";
   update();
-}
-function startOffchain() {
-  onchain = false;
-  document.getElementById("mode-selection").style.display = "none";
-  update();
-}
-  function startOnchain() {
-  if (!isConnected) {
-    alert("Connect wallet dulu bro!");
-    return;
   }
-  document.getElementById("mode-selection").style.display = "none";
-  update();
-}
 async function connectWallet() {
   if (!window.ethereum) return alert("Install MetaMask dulu bro");
 
