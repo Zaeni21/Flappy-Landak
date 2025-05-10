@@ -381,6 +381,9 @@ function disconnectWallet() {
     }
   }
   async function autoLoadNickname() {
+  async function autoLoadNickname() {
+  console.log("Running autoLoadNickname..."); // <--- INI YANG PERTAMA
+
   if (typeof window.ethereum === 'undefined') return;
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -389,23 +392,20 @@ function disconnectWallet() {
   if (accounts.length === 0) {
     try {
       await provider.send("eth_requestAccounts", []);
-      accounts = await provider.listAccounts(); // ambil ulang setelah connect
+      accounts = await provider.listAccounts();
     } catch {
-      console.log("Wallet not connected.");
+      console.log("User belum connect wallet.");
       return;
     }
   }
 
   const address = accounts[0];
-  console.log("Auto-load address:", address);
-
   const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, provider);
   const nickname = await contract.getNickname(address);
 
-  console.log("Nickname:", nickname);
+  console.log("Nickname dari kontrak:", nickname); // <--- INI YANG KEDUA
 
   if (nickname && nickname.length > 0) {
-    console.log("Showing nickname:", nickname);
     showNickname(nickname);
   }
 }
