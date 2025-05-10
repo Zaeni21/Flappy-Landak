@@ -148,6 +148,8 @@ function showGameOver(score) {
   <div id="gameOverOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
     justify-content: center; align-items: center; color: white; font-family: sans-serif; z-index: 9999;">
+    ...
+  </div>`;
     
     <h1 style="font-size: 2em; margin-bottom: 10px;">Game Over!</h1>
     <p style="font-size: 1.2em; margin-bottom: 20px;">Score: ${score}</p>
@@ -162,27 +164,26 @@ function showGameOver(score) {
   document.body.appendChild(overlay);
 
   if (onchain) {
-    setTimeout(() => {
-      const btn = document.getElementById("submitBtn");
-      if (!btn) return;
+  setTimeout(() => {
+    const btn = document.getElementById("submitBtn");
+    if (!btn) return;
 
-      let hasSubmitted = false;
-      btn.addEventListener("click", async () => {
-        if (hasSubmitted) return;
-        hasSubmitted = true;
-        btn.disabled = true;
-        btn.innerText = "Submitting...";
-        try {
-          await submitScoreOnchain(score);
-          btn.innerText = "Submitted!";
-          btn.style.background = "#16a34a";
-        } catch (e) {
-          btn.innerText = "Error!";
-          btn.style.background = "#dc2626";
-        }
-      });
-    }, 100);
-  }
+    let hasSubmitted = false;
+    btn.addEventListener("click", async () => {
+      if (hasSubmitted) return;
+      hasSubmitted = true;
+      btn.disabled = true;
+      btn.innerText = "Submitting...";
+      try {
+        await submitScoreOnchain(score);
+        btn.innerText = "Submitted!";
+        btn.style.background = "#16a34a";
+      } catch (e) {
+        btn.innerText = "Error!";
+        btn.style.background = "#dc2626";
+      }
+    });
+  }, 100);
 }
 function startOffchain() {
   onchain = false;
@@ -198,6 +199,9 @@ function startOffchain() {
   update();
 }
   function restartGame() {
+  const overlay = document.getElementById("gameOverOverlay");
+  if (overlay) overlay.remove();
+
   hasSubmitted = false;
   score = 0;
   frame = 0;
@@ -206,16 +210,7 @@ function startOffchain() {
   bird.velocity = 0;
   gameOver = false;
 
-  // Hapus overlay Game Over
-  const overlays = document.querySelectorAll("body > div");
-overlays.forEach(el => {
-  if (el.style.position === "fixed" && el.style.zIndex === "9999") el.remove();
-});
-
-  // Reset UI skor
   document.getElementById("score").innerText = "Score: 0";
-
-  // Mulai ulang game
   update();
 }
 async function connectWallet() {
