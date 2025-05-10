@@ -298,6 +298,67 @@ function disconnectWallet() {
   document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
   location.reload();
 }
+// ... existing script above ...
+
+const nicknameContractAddress = "0x605Ae5a4B8295c52988C8996d7f206Ad0Ccee9cF";
+const nicknameABI = [
+  {
+    "inputs": [{ "internalType": "string", "name": "name", "type": "string" }],
+    "name": "setNickname",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+    "name": "getNickname",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
+
+async function signInAndCheckNickname() {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const address = await signer.getAddress();
+
+    const message = `Sign in to Flappy Landak @ ${Date.now()}`;
+    const signature = await signer.signMessage(message);
+    const verified = ethers.utils.verifyMessage(message, signature);
+
+    if (verified.toLowerCase() !== address.toLowerCase()) {
+      alert("Signature failed. Please try again.");
+      return;
+    }
+
+    const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, signer);
+    const nickname = await contract.getNickname(address);
+
+    if (nickname && nickname.length > 0) {
+      showNickname(nickname);
+    } else {
+      const input = prompt("Choose your nickname:");
+      if (input && input.length > 0) {
+        const tx = await contract.setNickname(input);
+        await tx.wait();
+        showNickname(input);
+      }
+    }
+  } catch (err) {
+    console.error("Sign-in error:", err);
+  }
+}
+
+function showNickname(name) {
+  const nameEl = document.getElementById("nicknameDisplay");
+  if (nameEl) {
+    nameEl.textContent = `Welcome, ${name}!`;
+    nameEl.classList.remove("hidden");
+  }
+}
 </script>
 </body>
 </html>
