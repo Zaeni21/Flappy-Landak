@@ -24,11 +24,14 @@
 <!-- Game UI -->
 <div id="mode-selection" class="text-center pt-24 space-y-4 z-10 relative">
 
-  <!-- Tombol Sign In -->
+  <!-- Sign In Button -->
   <button onclick="signInAndCheckNickname()" class="bg-white text-black px-4 py-2 rounded font-bold shadow-md">
     Sign In
   </button>
+
+  <!-- Nickname Display -->
   <p id="nicknameDisplay" class="text-white text-lg font-semibold hidden"></p>
+
   <h1 class="text-3xl font-bold">Flappy Landak</h1>
   <div class="space-x-4">
     <button onclick="startOffchain()" class="bg-purple-600 px-4 py-2 rounded font-bold">Play Offchain</button>
@@ -321,43 +324,52 @@ function disconnectWallet() {
   document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
   location.reload();
 }
+  <script>
   const nicknameContractAddress = "0x605Ae5a4B8295c52988C8996d7f206Ad0Ccee9cF";
   const nicknameABI = [
-    { "inputs": [{ "internalType": "string", "name": "name", "type": "string" }], "name": "setNickname", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
-    { "inputs": [{ "internalType": "address", "name": "user", "type": "address" }], "name": "getNickname", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }
+    {
+      "inputs": [{ "internalType": "string", "name": "name", "type": "string" }],
+      "name": "setNickname",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+      "name": "getNickname",
+      "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+      "stateMutability": "view",
+      "type": "function"
+    }
   ];
 
   async function signInAndCheckNickname() {
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const address = await signer.getAddress();
 
-      const message = `Sign in to Flappy Landak @ ${Date.now()}`;
-      const signature = await signer.signMessage(message);
-      const verified = ethers.utils.verifyMessage(message, signature);
+    const message = `Sign in to Flappy Landak @ ${Date.now()}`;
+    const signature = await signer.signMessage(message);
+    const verified = ethers.utils.verifyMessage(message, signature);
 
-      if (verified.toLowerCase() !== address.toLowerCase()) {
-        alert("Signature failed. Please try again.");
-        return;
+    if (verified.toLowerCase() !== address.toLowerCase()) {
+      alert("Signature failed. Please try again.");
+      return;
+    }
+
+    const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, signer);
+    const nickname = await contract.getNickname(address);
+
+    if (nickname && nickname.length > 0) {
+      showNickname(nickname);
+    } else {
+      const input = prompt("Choose your nickname:");
+      if (input && input.length > 0) {
+        const tx = await contract.setNickname(input);
+        await tx.wait();
+        showNickname(input);
       }
-
-      const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, signer);
-      const nickname = await contract.getNickname(address);
-
-      if (nickname && nickname.length > 0) {
-  showNickname(nickname);
-} else {
-  const input = prompt("Choose your nickname:");
-        if (input && input.length > 0) {
-          const tx = await contract.setNickname(input);
-          await tx.wait();
-          showNickname(input);
-        }
-      }
-    } catch (err) {
-      console.error("Sign-in error:", err);
     }
   }
 
@@ -368,28 +380,22 @@ function disconnectWallet() {
       nameEl.classList.remove("hidden");
     }
   }
-
   async function autoLoadNickname() {
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      let accounts = await provider.listAccounts();
+  if (typeof window.ethereum === 'undefined') return;
 
-      if (accounts.length === 0) {
-        return;
-      }
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const accounts = await provider.listAccounts();
+  if (accounts.length === 0) return;
 
-      const address = accounts[0];
-      const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, provider);
-      const nickname = await contract.getNickname(address);
+  const address = accounts[0];
+  const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, provider);
+  const nickname = await contract.getNickname(address);
 
-      if (nickname && nickname.length > 0) {
-        showNickname(nickname);
-      }
-    } catch (err) {
-      console.error("Auto-load nickname error:", err);
-    }
+  if (nickname && nickname.length > 0) {
+    showNickname(nickname);
   }
-
+  }
   autoLoadNickname();
-</script></body>
+</script>
+</body>
 </html>
