@@ -23,6 +23,7 @@
 
 <!-- Game UI -->
 <div id="mode-selection" class="text-center pt-24 space-y-4 z-10 relative">
+  <p id="nicknameDisplay" class="text-white text-lg font-semibold hidden"></p>
   <h1 class="text-3xl font-bold">Flappy Landak</h1>
   <div class="space-x-4">
     <button onclick="startOffchain()" class="bg-purple-600 px-4 py-2 rounded font-bold">Play Offchain</button>
@@ -318,8 +319,7 @@ function disconnectWallet() {
   document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
   location.reload();
 }
-// ... existing script above ...
-
+<script>
 const nicknameContractAddress = "0x605Ae5a4B8295c52988C8996d7f206Ad0Ccee9cF";
 const nicknameABI = [
   {
@@ -337,6 +337,43 @@ const nicknameABI = [
     "type": "function"
   }
 ];
+
+async function connectWallet() {
+  if (!window.ethereum) return alert("Install MetaMask dulu bro");
+
+  try {
+    await ethereum.request({
+      method: 'wallet_addEthereumChain',
+      params: [{
+        chainId: '0x279F',
+        chainName: 'Monad Testnet',
+        rpcUrls: ['https://testnet-rpc.monad.xyz'],
+        nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
+        blockExplorerUrls: ['https://testnet.monadexplorer.com']
+      }]
+    });
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    walletAddress = await provider.getSigner().getAddress();
+    onchain = true;
+    isConnected = true;
+
+    const displayAddress = walletAddress.slice(0, 6) + "..." + walletAddress.slice(-3);
+    document.getElementById("walletAddress").innerHTML = `
+      <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+      <span class="text-sm">${displayAddress}</span>`;
+    document.getElementById("walletPopup").classList.remove("hidden");
+  } catch (err) {
+    console.error(err);
+    alert("Gagal connect wallet");
+  }
+}
+
+async function connectWalletAndSign() {
+  await connectWallet();
+  await signInAndCheckNickname();
+}
 
 async function signInAndCheckNickname() {
   try {
@@ -379,6 +416,14 @@ function showNickname(name) {
     nameEl.classList.remove("hidden");
   }
 }
+
+document.getElementById('walletAddress').addEventListener('click', async () => {
+  if (!isConnected) {
+    await connectWalletAndSign();
+  } else {
+    document.getElementById('walletPopup').classList.toggle('hidden');
+  }
+});
 </script>
 </body>
 </html>
