@@ -173,6 +173,9 @@ function showGameOver(score) {
         <button onclick="restartGame()" style="padding: 10px 20px; background: #9333ea; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer;">
   Play Again
 </button>
+<div id="gameOverOverlay" style="position: fixed; top: 0; ...">
+    ...
+  </div>`;
         ${submitBtnHTML}
       </div>
     </div>`;
@@ -211,11 +214,13 @@ function showGameOver(score) {
   bird.y = canvas.height / 2;
   bird.velocity = 0;
 
-  const overlay = document.querySelector("body > div[style*='position: fixed']");
+  // Hapus overlay game over
+  const overlay = document.getElementById("gameOverOverlay");
   if (overlay) overlay.remove();
 
   document.getElementById("score").innerText = "Score: 0";
-  update();
+
+  update(); // Mulai ulang animasi game
 }
 function startOffchain() {
   onchain = false;
