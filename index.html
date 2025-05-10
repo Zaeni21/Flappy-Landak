@@ -23,15 +23,6 @@
 
 <!-- Game UI -->
 <div id="mode-selection" class="text-center pt-24 space-y-4 z-10 relative">
-
-  <!-- Sign In Button -->
-  <button onclick="signInAndCheckNickname()" class="bg-white text-black px-4 py-2 rounded font-bold shadow-md">
-    Sign In
-  </button>
-
-  <!-- Nickname Display -->
-  <p id="nicknameDisplay" class="text-white text-lg font-semibold hidden"></p>
-
   <h1 class="text-3xl font-bold">Flappy Landak</h1>
   <div class="space-x-4">
     <button onclick="startOffchain()" class="bg-purple-600 px-4 py-2 rounded font-bold">Play Offchain</button>
@@ -264,37 +255,20 @@ async function showLeaderboard() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const userAddress = await signer.getAddress();
-
     const contract = new ethers.Contract(contractAddress, fullABI, provider);
-    const nicknameContract = new ethers.Contract(nicknameContractAddress, nicknameABI, provider);
-
     const players = await contract.getTopPlayers();
     const ul = document.getElementById("leaderboard-list");
     ul.innerHTML = "";
-
-    for (let i = 0; i < players.length; i++) {
-      const player = players[i];
+    players.forEach((player, index) => {
       const li = document.createElement("li");
-
-      let nickname = "";
-      try {
-        nickname = await nicknameContract.getNickname(player.addr);
-      } catch {}
-
-      const displayName = nickname && nickname.length > 0
-        ? nickname
-        : player.addr.slice(0, 6) + "..." + player.addr.slice(-4);
-
-      li.innerHTML = `${i + 1}. ${displayName} - ${player.score}`;
-
+      const shortAddr = player.addr.slice(0, 6) + "..." + player.addr.slice(-4);
+      li.innerHTML = `${index + 1}. ${shortAddr} - ${player.score}`;
       if (player.addr.toLowerCase() === userAddress.toLowerCase()) {
         li.style.color = "#22d3ee";
         li.style.fontWeight = "bold";
       }
-
       ul.appendChild(li);
-    }
-
+    });
     document.getElementById("leaderboard-popup").classList.remove("hidden");
   } catch (err) {
     alert("Gagal ambil leaderboard!");
@@ -324,78 +298,6 @@ function disconnectWallet() {
   document.getElementById('walletAddress').innerHTML = '<div class="w-4 h-4 bg-blue-500 rounded-full"></div><span class="text-sm">Connect Wallet</span>';
   location.reload();
 }
-  <script>
-  const nicknameContractAddress = "0x605Ae5a4B8295c52988C8996d7f206Ad0Ccee9cF";
-  const nicknameABI = [
-    {
-      "inputs": [{ "internalType": "string", "name": "name", "type": "string" }],
-      "name": "setNickname",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
-      "name": "getNickname",
-      "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
-      "stateMutability": "view",
-      "type": "function"
-    }
-  ];
-
-  async function signInAndCheckNickname() {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    const signer = provider.getSigner();
-    const address = await signer.getAddress();
-
-    const message = `Sign in to Flappy Landak @ ${Date.now()}`;
-    const signature = await signer.signMessage(message);
-    const verified = ethers.utils.verifyMessage(message, signature);
-
-    if (verified.toLowerCase() !== address.toLowerCase()) {
-      alert("Signature failed. Please try again.");
-      return;
-    }
-
-    const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, signer);
-    const nickname = await contract.getNickname(address);
-
-    if (nickname && nickname.length > 0) {
-      showNickname(nickname);
-    } else {
-      const input = prompt("Choose your nickname:");
-      if (input && input.length > 0) {
-        const tx = await contract.setNickname(input);
-        await tx.wait();
-        showNickname(input);
-      }
-    }
-  }
-
-  function showNickname(name) {
-    const nameEl = document.getElementById("nicknameDisplay");
-    if (nameEl) {
-      nameEl.textContent = `Welcome, ${name}!`;
-      nameEl.classList.remove("hidden");
-    }
-  }
-  async function autoLoadNickname() {
-  if (typeof window.ethereum === 'undefined') return;
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const accounts = await provider.listAccounts();
-  if (accounts.length === 0) return;
-
-  const address = accounts[0];
-  const contract = new ethers.Contract(nicknameContractAddress, nicknameABI, provider);
-  const nickname = await contract.getNickname(address);
-
-  if (nickname && nickname.length > 0) {
-    showNickname(nickname);
-  }
-  }
-  autoLoadNickname();
 </script>
 </body>
 </html>
