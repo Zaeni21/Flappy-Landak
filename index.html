@@ -135,8 +135,10 @@ function update() {
   requestAnimationFrame(update);
 }
 function showGameOver(score) {
+function showGameOver(score) {
   if (gameOver) return;
   gameOver = true;
+
   const overlay = document.createElement('div');
 
   const submitBtnHTML = onchain ? `
@@ -159,7 +161,7 @@ function showGameOver(score) {
         ${submitBtnHTML}
       </div>
     </div>`;
-  
+
   document.body.appendChild(overlay);
 
   if (onchain) {
