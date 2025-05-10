@@ -369,13 +369,11 @@ async function connectWallet() {
     alert("Gagal connect wallet");
   }
 }
-
+// Fungsi yang langsung connect + sign nickname
 async function connectWalletAndSign() {
   await connectWallet();
   await signInAndCheckNickname();
 }
-
-async function signInAndCheckNickname() {
   try {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
