@@ -311,7 +311,7 @@ async function showLeaderboard() {
     }
 
     const contract = new ethers.Contract(contractAddress, fullABI, signer);
-    const tx = await contract.distributeRewards({ value: ethers.utils.parseEther("0") });
+    const tx = await contract.distributeRewards({ value: ethers.utils.parseEther("5") });
     await tx.wait();
 
     alert("Rewards distributed!");
