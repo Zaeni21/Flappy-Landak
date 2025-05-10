@@ -300,6 +300,26 @@ async function showLeaderboard() {
     alert("Gagal ambil leaderboard!");
   }
 }
+  async function distributeRewardsFromContract() {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const user = await signer.getAddress();
+
+    if (user.toLowerCase() !== "0x408e68f9dce5a0cd175cd7c7eefb634d5f03a257") {
+      return alert("Only admin can distribute rewards.");
+    }
+
+    const contract = new ethers.Contract(contractAddress, fullABI, signer);
+    const tx = await contract.distributeRewards({ value: ethers.utils.parseEther("0") });
+    await tx.wait();
+
+    alert("Rewards distributed!");
+  } catch (err) {
+    console.error("Gagal distribusi:", err);
+    alert("Distribusi gagal: " + err.message);
+  }
+}
 function mintSkin() {
   alert("Minting skin coming soon!");
 }
