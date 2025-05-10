@@ -170,10 +170,9 @@ function showGameOver(score) {
       <p style="font-size: 1.2em; margin-bottom: 20px;">Score: ${score}</p>
 
       <div class="flex space-x-4">
-        <button onclick="location.reload()" style="padding: 10px 20px;
-          background: #9333ea; border: none; border-radius: 8px; color: white;
-          font-weight: bold; cursor: pointer;">Play Again</button>
-
+        <button onclick="restartGame()" style="padding: 10px 20px; background: #9333ea; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer;">
+  Play Again
+</button>
         ${submitBtnHTML}
       </div>
     </div>`;
@@ -202,6 +201,21 @@ function showGameOver(score) {
       });
     }, 100);
   }
+}
+  function restartGame() {
+  gameOver = false;
+  hasSubmitted = false;
+  score = 0;
+  frame = 0;
+  pipes = [];
+  bird.y = canvas.height / 2;
+  bird.velocity = 0;
+
+  const overlay = document.querySelector("body > div[style*='position: fixed']");
+  if (overlay) overlay.remove();
+
+  document.getElementById("score").innerText = "Score: 0";
+  update();
 }
 function startOffchain() {
   onchain = false;
