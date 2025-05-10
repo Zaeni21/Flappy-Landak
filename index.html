@@ -145,20 +145,19 @@ function showGameOver(score) {
       font-weight: bold; cursor: pointer;">Submit Score</button>` : '';
 
   overlay.innerHTML = `
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
-      justify-content: center; align-items: center; color: white; font-family: sans-serif; z-index: 9999;">
-      
-      <h1 style="font-size: 2em; margin-bottom: 10px;">Game Over!</h1>
-      <p style="font-size: 1.2em; margin-bottom: 20px;">Score: ${score}</p>
+  <div id="gameOverOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
+    justify-content: center; align-items: center; color: white; font-family: sans-serif; z-index: 9999;">
+    
+    <h1 style="font-size: 2em; margin-bottom: 10px;">Game Over!</h1>
+    <p style="font-size: 1.2em; margin-bottom: 20px;">Score: ${score}</p>
 
-      <div class="flex space-x-4">
-        <button onclick="restartGame()" style="padding: 10px 20px;
-  background: #9333ea; border: none; border-radius: 8px; color: white;
-  font-weight: bold; cursor: pointer;">Play Again</button>
-        ${submitBtnHTML}
-      </div>
-    </div>`;
+    <div class="flex space-x-4">
+      <button onclick="restartGame()" style="padding: 10px 20px;
+        background: #9333ea; border: none; border-radius: 8px; color: white;
+        font-weight: bold; cursor: pointer;">Play Again</button>
+    </div>
+  </div>`;
 
   document.body.appendChild(overlay);
 
@@ -208,8 +207,10 @@ function startOffchain() {
   gameOver = false;
 
   // Hapus overlay Game Over
-  const overlay = document.querySelector("body > div[style*='position: fixed']");
-  if (overlay) overlay.remove();
+  const overlays = document.querySelectorAll("body > div");
+overlays.forEach(el => {
+  if (el.style.position === "fixed" && el.style.zIndex === "9999") el.remove();
+});
 
   // Reset UI skor
   document.getElementById("score").innerText = "Score: 0";
