@@ -135,10 +135,10 @@ function update() {
   requestAnimationFrame(update);
 }
 function showGameOver(score) {
-  if (gameOver) return;  // Stop kalau udah game over
-  gameOver = true;       // Set status game over sekali aja
+  if (gameOver) return;
+  gameOver = true;
   const overlay = document.createElement('div');
-}
+
   const submitBtnHTML = onchain ? `
     <button id="submitBtn" style="padding: 10px 20px;
       background: #22c55e; border: none; border-radius: 8px; color: white;
@@ -154,13 +154,12 @@ function showGameOver(score) {
 
       <div class="flex space-x-4">
         <button onclick="restartGame()" style="padding: 10px 20px;
-  background: #9333ea; border: none; border-radius: 8px; color: white;
-  font-weight: bold; cursor: pointer;">Play Again</button>
-
+          background: #9333ea; border: none; border-radius: 8px; color: white;
+          font-weight: bold; cursor: pointer;">Play Again</button>
         ${submitBtnHTML}
       </div>
     </div>`;
-
+  
   document.body.appendChild(overlay);
 
   if (onchain) {
