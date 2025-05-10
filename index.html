@@ -217,7 +217,10 @@ function startOffchain() {
   update();
 }
 async function connectWallet() {
-  if (!window.ethereum) return alert("Install MetaMask dulu bro");
+  if (!window.ethereum || (!window.okxwallet && !window.ethereum.isConnected())) {
+  alert("Tidak ada wallet terdeteksi. Install OKX Wallet atau MetaMask dulu bro!");
+  return;
+}
 
   try {
     await ethereum.request({
